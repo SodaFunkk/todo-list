@@ -21,13 +21,50 @@ form.addEventListener("submit", function (event) {
 });
 
 function render() {
-
     list.innerHTML = "";
-
     tasks.forEach(function (task) {
         const li = document.createElement("li");
+        
+        if (task.completed){
+            li.classList.add("completed");
+        }
 
-        li.textContent = task.text;
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = task.completed;
+
+        checkbox.addEventListener("change", function() {
+            toggleTask(task.id);
+        });
+
+        const span = document.createElement("span");
+        span.textContent = task.text;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener("click", function(){
+            deleteTask(task.id);
+        });
+
+        li.append(checkbox, span, deleteBtn);
         list.append(li);
     });
+}
+
+function toggleTask(id) {
+    const task = tasks.find(function (t){
+        return t.id === id;
+    });
+    
+    task.completed = !task.completed;
+
+    render();
+}
+
+function deleteTask(id) {
+    tasks = tasks.filter(function (t){
+        return t.id !== id;
+    });
+    
+    render();
 }
