@@ -1,4 +1,5 @@
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let currentFilter = "all";
 const form = document.querySelector("#task-form");
 const input = document.querySelector("#task-input");
 const list = document.querySelector("#task-list");
@@ -19,11 +20,29 @@ form.addEventListener("submit", function (event) {
 
     render();
 });
+const filterButtons = document.querySelectorAll("#filters button");
+
+filterButtons.forEach(function(button){
+    button.addEventListener("click", function (){
+        currentFilter = button.dataset.filter;
+        render();
+    });
+});
 
 function render() {
     saveTasks();
     list.innerHTML = "";
-    tasks.forEach(function (task) {
+    let visibleTasks = tasks;
+    if (currentFilter === "active") {
+        visibleTasks = tasks.filter(function (task){
+            return !task.completed;
+        });
+    } else if (currentFilter === "completed") {
+        visibleTasks = tasks.filter(function (task){
+            return task.completed;
+        });
+    }
+    visibleTasks.forEach(function (task) {
         const li = document.createElement("li");
         
         if (task.completed){
