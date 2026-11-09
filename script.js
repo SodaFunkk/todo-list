@@ -1,4 +1,4 @@
-let tasks = [];
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 const form = document.querySelector("#task-form");
 const input = document.querySelector("#task-input");
 const list = document.querySelector("#task-list");
@@ -21,6 +21,7 @@ form.addEventListener("submit", function (event) {
 });
 
 function render() {
+    saveTasks();
     list.innerHTML = "";
     tasks.forEach(function (task) {
         const li = document.createElement("li");
@@ -68,3 +69,7 @@ function deleteTask(id) {
     
     render();
 }
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+render();
